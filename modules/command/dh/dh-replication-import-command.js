@@ -97,7 +97,7 @@ class DhReplicationImportCommand extends Command {
         const calculatedDistPublicKey = Encryption.unpackEPK(distributionEpk);
         ImportUtilities.immutableDecryptVertices(distEncVertices, calculatedDistPublicKey);
 
-        const holdingData = await Models.holding_data.findOne({
+        let holdingData = await Models.holding_data.findOne({
             where: {
                 data_set_id: dataSetId,
                 color: encColor,
@@ -116,22 +116,7 @@ class DhReplicationImportCommand extends Command {
             }, true, encColor);
         }
 
-        // Store holding information and generate keys for eventual data replication.
-        await Models.holding_data.create({
-            data_set_id: dataSetId,
-            source_wallet: dcWallet,
-            litigation_public_key: litigationPublicKey,
-            litigation_root_hash: litigationRootHash,
-            distribution_public_key: distributionPublicKey,
-            distribution_private_key: distributionPrivateKey,
-            distribution_epk: distributionEpk,
-            transaction_hash: transactionHash,
-            color: encColor,
-            origin: 'REPLICATED',
-            offer_id: offerId,
-        });
-
-        const dataInfo = await Models.data_info.findOne({
+        let dataInfo = await Models.data_info.findOne({
             where: {
                 data_set_id: dataSetId,
             },
@@ -152,7 +137,7 @@ class DhReplicationImportCommand extends Command {
             importResult = importResult.response;
 
             const dataSize = bytes(JSON.stringify(importResult.vertices));
-            await Models.data_info.create({
+            dataInfo = await Models.data_info.create({
                 data_set_id: importResult.data_set_id,
                 total_documents: importResult.vertices.length,
                 root_hash: importResult.root_hash,
@@ -162,6 +147,29 @@ class DhReplicationImportCommand extends Command {
                 origin: 'HOLDING',
             });
         }
+
+        // Store holding information and generate keys for eventual data replication.
+        holdingData = await Models.holding_data.create({
+            data_set_id: dataSetId,
+            source_wallet: dcWallet,
+            litigation_public_key: litigationPublicKey,
+            litigation_root_hash: litigationRootHash,
+            distribution_public_key: distributionPublicKey,
+            distribution_private_key: distributionPrivateKey,
+            distribution_epk: distributionEpk,
+            transaction_hash: transactionHash,
+            color: encColor,
+            origin: 'REPLICATED',
+        });
+
+        const bid = Models.bids.findOne({
+            where: {
+                offer_id: offerId,
+            },
+        });
+        await holdingData.setBid(bid);
+        await holdingData.setDataInfo(dataInfo);
+
         this.logger.important(`[DH] Replication finished for offer ID ${offerId}`);
 
         const toSign = [
