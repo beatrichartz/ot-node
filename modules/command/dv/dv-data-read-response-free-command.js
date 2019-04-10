@@ -115,7 +115,7 @@ class DVDataReadResponseFreeCommand extends Command {
         }
 
         const dataSize = bytes(JSON.stringify(vertices));
-        await Models.data_info.create({
+        await Models.dataset.create({
             data_set_id: dataSetId,
             total_documents: vertices.length,
             root_hash: rootHash,

@@ -116,7 +116,7 @@ class DhReplicationImportCommand extends Command {
             }, true, encColor);
         }
 
-        let dataInfo = await Models.data_info.findOne({
+        let dataInfo = await Models.dataset.findOne({
             where: {
                 data_set_id: dataSetId,
             },
@@ -137,7 +137,7 @@ class DhReplicationImportCommand extends Command {
             importResult = importResult.response;
 
             const dataSize = bytes(JSON.stringify(importResult.vertices));
-            dataInfo = await Models.data_info.create({
+            dataInfo = await Models.dataset.create({
                 data_set_id: importResult.data_set_id,
                 total_documents: importResult.vertices.length,
                 root_hash: importResult.root_hash,

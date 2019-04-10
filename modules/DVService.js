@@ -118,7 +118,7 @@ class DVService {
         this.remoteControl.readNotification(`Import ID ${importId} imported successfully.`);
 
         const dataSize = bytes(JSON.stringify(vertices));
-        await Models.data_info.create({
+        await Models.dataset.create({
             import_id: importId,
             total_documents: vertices.length,
             root_hash: rootHash,

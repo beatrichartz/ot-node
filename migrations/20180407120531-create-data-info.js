@@ -1,6 +1,6 @@
 
 module.exports = {
-    up: (queryInterface, Sequelize) => queryInterface.createTable('data_info', {
+    up: (queryInterface, Sequelize) => queryInterface.createTable('dataset', {
         id: {
             allowNull: false,
             autoIncrement: true,
@@ -37,5 +37,5 @@ module.exports = {
             type: Sequelize.STRING,
         },
     }),
-    down: (queryInterface, Sequelize) => queryInterface.dropTable('data_infos'),
+    down: (queryInterface, Sequelize) => queryInterface.dropTable('dataset'),
 };

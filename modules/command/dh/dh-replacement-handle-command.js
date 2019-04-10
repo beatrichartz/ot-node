@@ -166,7 +166,7 @@ class DHReplacementImportCommand extends Command {
             offer_id: offerId,
         });
 
-        const dataInfo = await Models.data_info.findOne({
+        const dataInfo = await Models.dataset.findOne({
             where: {
                 data_set_id: dataSetId,
             },
@@ -187,7 +187,7 @@ class DHReplacementImportCommand extends Command {
             importResult = importResult.response;
 
             const dataSize = bytes(JSON.stringify(importResult.vertices));
-            await Models.data_info.create({
+            await Models.dataset.create({
                 data_set_id: importResult.data_set_id,
                 total_documents: importResult.vertices.length,
                 root_hash: importResult.root_hash,

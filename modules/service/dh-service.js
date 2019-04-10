@@ -518,7 +518,7 @@ class DHService {
             }
              */
 
-            const dataInfo = await Models.data_info.findOne({
+            const dataInfo = await Models.dataset.findOne({
                 where: {
                     import_id: importId,
                 },
@@ -861,7 +861,7 @@ class DHService {
         // Check if import came from DH replication or reading replication.
         const holdingData = await Models.holding_data.find({ where: { data_set_id: dataSetId } });
 
-        const dataInfo = await Models.data_info.find({ where: { data_set_id: dataSetId } });
+        const dataInfo = await Models.dataset.find({ where: { data_set_id: dataSetId } });
 
         if (dataInfo) {
             const verticesPromise = this.graphStorage.findVerticesByImportId(dataSetId);

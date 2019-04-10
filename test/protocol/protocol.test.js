@@ -657,7 +657,7 @@ describe.skip('Protocol tests', () => {
                 normalized.edges,
             );
 
-            Models.data_info.create({
+            Models.dataset.create({
                 import_id: importId,
                 root_hash: rootHash,
                 import_hash: importHash,

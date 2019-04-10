@@ -210,11 +210,11 @@ class RemoteControl {
     }
 
     /**
-     * Update imports table from data_info
+     * Update imports table from dataset
      */
     getImports() {
         return new Promise((resolve, reject) => {
-            Models.data_info.findAll()
+            Models.dataset.findAll()
                 .then((rows) => {
                     this.socket.emit('imports', rows);
                     resolve();
@@ -367,7 +367,7 @@ class RemoteControl {
             async (bid) => {
                 const holding = await this._findHoldingByBid(bid);
 
-                const dataInfo = await Models.data_info.findOne({
+                const dataInfo = await Models.dataset.findOne({
                     where: {
                         data_set_id: holding.data_set_id,
                     },
@@ -479,7 +479,7 @@ class RemoteControl {
      * Get local data
      */
     getLocalData(importId) {
-        Models.data_info.findAll({
+        Models.dataset.findAll({
             where: {
                 import_id: importId,
             },
@@ -586,7 +586,7 @@ class RemoteControl {
     }
 
     getLocalQueryResponses(datasetId) {
-        Models.data_info.findAll({
+        Models.dataset.findAll({
             where: {
                 data_set_id: datasetId,
             },
