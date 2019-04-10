@@ -6,6 +6,8 @@ module.exports = (sequelize, DataTypes) => {
         result: DataTypes.JSON,
         status: DataTypes.STRING,
         message: DataTypes.STRING,
+        created_at: DataTypes.DATE,
+        updated_at: DataTypes.DATE,
     }, {});
     miner.associate = (models) => {
         // associations can be defined here

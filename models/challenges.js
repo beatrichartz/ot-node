@@ -16,6 +16,8 @@ module.exports = (sequelize, DataTypes) => {
         start_time: DataTypes.INTEGER,
         end_time: DataTypes.INTEGER,
         status: DataTypes.STRING,
+        created_at: DataTypes.DATE,
+        updated_at: DataTypes.DATE,
     }, {});
     challenges.associate = (models) => {
         challenges.belongsTo(models.offers, {

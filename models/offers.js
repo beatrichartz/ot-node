@@ -24,6 +24,8 @@ module.exports = (sequelize, DataTypes) => {
         global_status: DataTypes.STRING,
         message: DataTypes.STRING,
         transaction_hash: DataTypes.STRING(128),
+        created_at: DataTypes.DATE,
+        updated_at: DataTypes.DATE,
     }, {});
     offers.associate = (models) => {
     // associations can be defined here

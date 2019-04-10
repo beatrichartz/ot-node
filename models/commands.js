@@ -1,7 +1,7 @@
 const uuidv4 = require('uuid/v4');
 
 module.exports = (sequelize, DataTypes) => {
-    const offers = sequelize.define('commands', {
+    const commands = sequelize.define('commands', {
         id: {
             type: DataTypes.UUID,
             primaryKey: true,
@@ -23,9 +23,13 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             defaultValue: 0,
         },
+        created_at: DataTypes.DATE,
+        updated_at: DataTypes.DATE,
     }, {});
-    offers.associate = (models) => {
-        // associations can be defined here
+    commands.associate = (models) => {
+        commands.belongsTo(models.commands, {
+            foreignKey: 'parent_id',
+        });
     };
-    return offers;
+    return commands;
 };

@@ -1,7 +1,7 @@
 const uuidv4 = require('uuid/v4');
 
 module.exports = (sequelize, DataTypes) => {
-    var Event = sequelize.define('events', {
+    const Event = sequelize.define('events', {
         id: {
             type: DataTypes.STRING,
             defaultValue: () => uuidv4(),
@@ -14,8 +14,10 @@ module.exports = (sequelize, DataTypes) => {
         block: DataTypes.INTEGER,
         finished: DataTypes.BOOLEAN,
         timestamp: DataTypes.INTEGER,
+        created_at: DataTypes.DATE,
+        updated_at: DataTypes.DATE,
     }, {});
-    Event.associate = function (models) {
+    Event.associate = (models) => {
     // associations can be defined here
     };
     return Event;
