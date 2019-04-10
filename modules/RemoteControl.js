@@ -415,7 +415,7 @@ class RemoteControl {
      * Get replicated data
      */
     async getReplicatedData() {
-        const replicated = await Models.replicated_data.findAll({
+        const replicated = await Models.holders.findAll({
             where: {
                 status: { [Models.Sequelize.Op.notIn]: ['STARTED', 'VERIFIED'] },
             },

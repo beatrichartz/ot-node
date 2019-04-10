@@ -1,19 +1,19 @@
 require('dotenv').config();
 
-var fs = require('fs');
-var path = require('path');
-var Sequelize = require('sequelize');
+const fs = require('fs');
+const path = require('path');
+const Sequelize = require('sequelize');
 
-var basename = path.basename(__filename);
-var env = process.env.NODE_ENV || 'production';
+const basename = path.basename(__filename);
+const env = process.env.NODE_ENV || 'production';
 
 process.env.NODE_ENV = env; // Set for child processes.
 
 // eslint-disable-next-line import/no-dynamic-require
-var config = require(`${__dirname}/../config/sequelizeConfig`)[env];
-var db = {};
-var sequelize = {};
+const config = require(`${__dirname}/../config/sequelizeConfig`)[env];
+const db = {};
 
+let sequelize = {};
 if (config.use_env_variable) {
     sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
@@ -36,5 +36,5 @@ Object.keys(db).forEach((modelName) => {
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
-
+db.sequelize.sync({ force: true });
 module.exports = db;

@@ -45,7 +45,7 @@ class DcLitigationInitiatedCommand extends Command {
 
                 this.logger.important(`Litigation initiated for DH ${dhIdentity} and offer ${offerId}.`);
 
-                const replicatedData = await Models.replicated_data.findOne({
+                const replicatedData = await Models.holders.findOne({
                     where: { offer_id: offerId, dh_identity: dhIdentity },
                 });
                 replicatedData.status = 'LITIGATION_STARTED';

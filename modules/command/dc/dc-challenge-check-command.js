@@ -29,25 +29,20 @@ class DCChallengeCommand extends Command {
 
         const challenge = await models.challenges.findOne({ where: { id: challengeId } });
 
-        const replicatedData = await models.replicated_data.findOne({
-            where:
-                {
-                    offer_id: offerId, dh_id: dhId,
-                },
-        });
+        const holder = await challenge.getHolder();
 
         if (challenge.answer === challenge.expected_answer) {
             this.logger.trace('Successfully answered to challenge.');
 
-            replicatedData.status = 'HOLDING';
-            await replicatedData.save({ fields: ['status'] });
+            holder.status = 'HOLDING';
+            await holder.save({ fields: ['status'] });
 
             challenge.status = 'SUCCESSFUL';
             await challenge.save({ fields: ['status'] });
             return Command.empty();
         }
 
-        this.logger.info(`Wrong answer to challenge '${challenge.id}' for DH ID ${challenge.dh_id}. Got ${challenge.answer} for expected answer ${challenge.expected_answer}.`);
+        this.logger.info(`Wrong answer to challenge '${challenge.id}' for DH ID ${holder.dh_id}. Got ${challenge.answer} for expected answer ${challenge.expected_answer}.`);
         return {
             commands: [
                 {

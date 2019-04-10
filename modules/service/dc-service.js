@@ -259,7 +259,7 @@ class DCService {
             return;
         }
 
-        const offerModel = await models.offers.findOne({
+        const offer = await models.offers.findOne({
             where: {
                 offer_id: offerId,
             },
@@ -267,13 +267,12 @@ class DCService {
                 ['id', 'DESC'],
             ],
         });
-        if (!offerModel) {
+        if (!offer) {
             const message = `Replication request for offer external ID ${offerId} that I don't know.`;
             this.logger.warn(message);
             await this.transport.sendResponse(response, { status: 'fail', message });
             return;
         }
-        const offer = offerModel.get({ plain: true });
         if (offer.status !== 'STARTED') {
             const message = `Replication request for offer external ${offerId} that is not in STARTED state.`;
             this.logger.warn(message);
@@ -323,7 +322,7 @@ class DCService {
             await this.transport.sendResponse(response, { status: 'fail', message });
         }
 
-        const usedDH = await models.replicated_data.findOne({
+        const usedDH = await models.holders.findOne({
             where: {
                 dh_id: identity,
                 dh_wallet: wallet,
@@ -361,11 +360,10 @@ class DCService {
         const colorNumber = this.replicationService.castColorToNumber(color);
 
         const replication = await this.replicationService.loadReplication(offer.id, color);
-        await models.replicated_data.create({
+        const replicatedData = await models.holders.create({
             dh_id: identity,
             dh_wallet: wallet.toLowerCase(),
             dh_identity: dhIdentity.toLowerCase(),
-            offer_id: offer.offer_id,
             litigation_private_key: replication.litigationPrivateKey,
             litigation_public_key: replication.litigationPublicKey,
             distribution_public_key: replication.distributionPublicKey,
@@ -377,6 +375,7 @@ class DCService {
             status: 'STARTED',
             color: colorNumber.toNumber(),
         });
+        await replicatedData.setOffer(offer);
 
         const toSign = [
             Utilities.denormalizeHex(new BN(replication.distributionEpkChecksum).toString('hex')),

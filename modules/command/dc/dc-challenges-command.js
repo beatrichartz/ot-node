@@ -32,12 +32,7 @@ class DCChallengesCommand extends Command {
             const challenges = await this._getChallenges();
 
             await forEach(challenges, async (challenge) => {
-                const challenged = await models.replicated_data.findOne({
-                    where: {
-                        dh_id: challenge.dh_id,
-                        offer_id: challenge.offer_id,
-                    },
-                });
+                const challenged = await challenge.getHolder();
 
                 if (challenged.status !== 'HOLDING') {
                     return;
@@ -81,20 +76,15 @@ class DCChallengesCommand extends Command {
 
         const groupedByDhId = utilities.groupBy(challenges, challenge => challenge.dh_id);
 
-        const unique = [];
+        const uniqueChallenges = [];
         groupedByDhId.forEach((value) => {
             if (value.length > 0) {
-                unique.push(value[0]);
+                uniqueChallenges.push(value[0]);
             }
         });
 
-        return filter(unique, async (challenge) => {
-            const offer = await models.offers.findOne({
-                where: {
-                    offer_id: challenge.offer_id,
-                },
-            });
-
+        return filter(uniqueChallenges, async (challenge) => {
+            const offer = await challenge.getOffer();
             if (offer == null) {
                 this.logger.error(`Failed to find offer ${challenge.offer_id}. Possible database corruption.`);
                 return false;

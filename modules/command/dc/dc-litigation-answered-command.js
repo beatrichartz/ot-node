@@ -43,7 +43,7 @@ class DCLitigationAnsweredCommand extends Command {
 
                 this.logger.important(`Litigation answered for DH ${dhIdentity} and offer ${offerId}.`);
 
-                const replicatedData = await models.replicated_data.findOne({
+                const replicatedData = await models.holders.findOne({
                     where: { offer_id: offerId, dh_identity: dhIdentity },
                 });
                 replicatedData.status = 'LITIGATION_ANSWERED';
@@ -78,7 +78,7 @@ class DCLitigationAnsweredCommand extends Command {
             blockId,
         } = command.data;
 
-        const replicatedData = await models.replicated_data.findOne({
+        const replicatedData = await models.holders.findOne({
             where: { offer_id: offerId, dh_identity: dhIdentity },
         });
         replicatedData.status = 'LITIGATION_NOT_ANSWERED';

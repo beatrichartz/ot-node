@@ -39,7 +39,7 @@ class DCOfferChooseCommand extends Command {
             id: internalOfferId,
         });
 
-        const replications = await models.replicated_data.findAll({
+        const replications = await models.holders.findAll({
             where: {
                 offer_id: offer.offer_id,
                 status: {

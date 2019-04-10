@@ -49,7 +49,7 @@ class DCLitigationCompleted extends Command {
                     this.logger.notify(`DH ${dhIdentity} was not penalized for the offer ${offerId}.`);
                 }
 
-                const replicatedData = await models.replicated_data.findOne({
+                const replicatedData = await models.holders.findOne({
                     where: { offer_id: offerId, dh_identity: dhIdentity },
                 });
 

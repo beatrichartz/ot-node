@@ -7,7 +7,11 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: () => uuidv4(),
             primaryKey: true,
         },
-        offer_id: DataTypes.STRING,
+        offer_id: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            unique: true,
+        },
         data_set_id: DataTypes.STRING,
         holding_time_in_minutes: DataTypes.INTEGER,
         token_amount_per_holder: DataTypes.STRING,

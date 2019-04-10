@@ -32,7 +32,8 @@ class DCChallengeCommand extends Command {
             },
         });
 
-        this.logger.trace(`Sending challenge to ${challenge.dh_id}. Offer ID ${challenge.offer_id}, block ID ${challenge.block_id}.`);
+        const holder = await challenge.getHolder();
+        this.logger.trace(`Sending challenge to ${holder.dh_id}. Offer ID ${challenge.offer_id}, block ID ${challenge.block_id}.`);
 
         challenge.end_time = new Date().getTime() + constants.DEFAULT_CHALLENGE_RESPONSE_TIME_MILLS;
 
@@ -43,7 +44,7 @@ class DCChallengeCommand extends Command {
                 challenge_id: challenge.id,
                 litigator_id: this.config.identity,
             },
-        }, challenge.dh_id);
+        }, holder.dh_id);
 
         let checkCommandDelay = this.config.challengeResponseTimeMills;
         if (checkCommandDelay == null) {
@@ -55,8 +56,8 @@ class DCChallengeCommand extends Command {
                     name: 'dcChallengeCheckCommand',
                     delay: checkCommandDelay,
                     data: {
-                        dhId: challenge.dh_id,
-                        dhIdentity: challenge.dh_identity,
+                        dhId: holder.dh_id,
+                        dhIdentity: holder.dh_identity,
                         offerId: challenge.offer_id,
                         dataSetId: challenge.data_set_id,
                         litigationPrivateKey,

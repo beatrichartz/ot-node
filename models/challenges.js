@@ -7,8 +7,7 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             defaultValue: () => uuidv4(),
         },
-        dh_id: DataTypes.STRING,
-        dh_identity: DataTypes.STRING,
+        holder_id: DataTypes.STRING,
         block_id: DataTypes.INTEGER,
         offer_id: DataTypes.STRING,
         answer: DataTypes.STRING,
@@ -19,7 +18,13 @@ module.exports = (sequelize, DataTypes) => {
         status: DataTypes.STRING,
     }, {});
     challenges.associate = (models) => {
-        // associations can be defined here
+        challenges.belongsTo(models.offers, {
+            foreignKey: 'offer_id',
+            targetKey: 'offer_id',
+        });
+        challenges.belongsTo(models.holders, {
+            foreignKey: 'holder_id',
+        });
     };
     return challenges;
 };

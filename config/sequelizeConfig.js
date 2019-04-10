@@ -23,7 +23,7 @@ module.exports = {
         operatorsAliases: false,
         define: {
             underscored: true,
-            timestamps: false,
+            timestamps: true,
         },
         retry: {
             match: [

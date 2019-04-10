@@ -1,6 +1,6 @@
 
 module.exports = {
-    up: (queryInterface, Sequelize) => queryInterface.createTable('replicated_data', {
+    up: (queryInterface, Sequelize) => queryInterface.createTable('holders', {
         id: {
             allowNull: false,
             autoIncrement: true,
@@ -59,6 +59,14 @@ module.exports = {
             allowNull: false,
             type: Sequelize.STRING,
         },
+        created_at: {
+            allowNull: false,
+            type: Sequelize.DATE,
+        },
+        updated_at: {
+            allowNull: false,
+            type: Sequelize.DATE,
+        },
     }),
-    down: (queryInterface, Sequelize) => queryInterface.dropTable('replicated_data'),
+    down: (queryInterface, Sequelize) => queryInterface.dropTable('holders'),
 };

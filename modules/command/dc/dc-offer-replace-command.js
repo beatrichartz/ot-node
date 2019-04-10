@@ -46,7 +46,7 @@ class DCOfferReplaceCommand extends Command {
 
         const nodeIdentifiers = solution.nodeIdentifiers.map(ni =>
             Utilities.normalizeHex(ni).toLowerCase());
-        const replications = await Models.replicated_data.findAll({
+        const replications = await Models.holders.findAll({
             where: {
                 offer_id: offerId,
                 dh_identity: { [Op.in]: nodeIdentifiers },

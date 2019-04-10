@@ -59,7 +59,7 @@ class DcOfferFinalizedCommand extends Command {
                 await this._setHolders(offer, event);
 
                 // clear old replicated data
-                await Models.replicated_data.destroy({
+                await Models.holders.destroy({
                     where: {
                         offer_id: offerId,
                         status: {
@@ -105,18 +105,18 @@ class DcOfferFinalizedCommand extends Command {
         const vertices = await this.graphStorage.findVerticesByImportId(offer.data_set_id);
         const holders = [holder1, holder2, holder3].map(h => Utilities.normalizeHex(h));
         await forEach(holders, async (holder) => {
-            const replicatedData = await Models.replicated_data.findOne({
+            const dbHolder = await Models.holders.findOne({
                 where: {
                     offer_id: offer.offer_id,
                     dh_identity: holder,
                 },
             });
-            replicatedData.status = 'HOLDING';
-            await replicatedData.save({ fields: ['status'] });
+            dbHolder.status = 'HOLDING';
+            await dbHolder.save({ fields: ['status'] });
 
             const encryptedVertices = importUtilitites.immutableEncryptVertices(
                 vertices,
-                replicatedData.litigation_private_key,
+                dbHolder.litigation_private_key,
             );
 
             const challenges = this.challengeService.generateChallenges(
@@ -124,17 +124,17 @@ class DcOfferFinalizedCommand extends Command {
                 endTime, this.config.numberOfChallenges,
             );
 
-            await forEach(challenges, async challenge =>
-                Models.challenges.create({
-                    dh_id: replicatedData.dh_id,
-                    dh_identity: replicatedData.dh_identity,
+            await forEach(challenges, async (challenge) => {
+                const dbChallenge = await Models.challenges.create({
                     data_set_id: offer.data_set_id,
                     block_id: challenge.block_id,
                     expected_answer: challenge.answer,
                     start_time: challenge.time,
                     offer_id: offer.offer_id,
                     status: 'PENDING',
-                }));
+                });
+                await dbChallenge.setHolder(dbHolder);
+            });
         });
     }
 
@@ -167,7 +167,7 @@ class DcOfferFinalizedCommand extends Command {
     default(map) {
         const command = {
             name: 'dcOfferFinalizedCommand',
-            delay: 0,
+            delay: 5000,
             period: 5000,
             deadline_at: Date.now() + (5 * 60 * 1000),
             transactional: false,

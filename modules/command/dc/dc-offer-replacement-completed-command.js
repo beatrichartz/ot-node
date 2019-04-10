@@ -60,7 +60,7 @@ class DCOfferReplacementCompletedCommand extends Command {
                     chosenHolder,
                 } = JSON.parse(event.data);
 
-                const holder = await models.replicated_data.findOne({
+                const holder = await models.holders.findOne({
                     where: {
                         offer_id: offerId,
                         dh_identity: utilities.normalizeHex(chosenHolder),
@@ -98,7 +98,7 @@ class DCOfferReplacementCompletedCommand extends Command {
                     }));
 
                 // clear old replicated data
-                await models.replicated_data.destroy({
+                await models.holders.destroy({
                     where: {
                         offer_id: offerId,
                         status: {
