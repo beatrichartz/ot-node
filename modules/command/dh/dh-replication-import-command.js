@@ -127,6 +127,8 @@ class DhReplicationImportCommand extends Command {
             distribution_epk: distributionEpk,
             transaction_hash: transactionHash,
             color: encColor,
+            origin: 'REPLICATED',
+            offer_id: offerId,
         });
 
         const dataInfo = await Models.data_info.findOne({

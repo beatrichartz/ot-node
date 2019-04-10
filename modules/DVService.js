@@ -296,6 +296,8 @@ class DVService {
                     data_public_key: publicKey,
                     distribution_public_key: publicKey,
                     epk,
+                    origin: 'PURCHASED',
+                    offer_id: null,
                 });
                 networkQuery.status = 'FINISHED';
                 await networkQuery.save({ fields: ['status'] });
@@ -350,6 +352,8 @@ class DVService {
                 data_public_key: publicKey,
                 distribution_public_key: publicKey,
                 epk,
+                origin: 'PURCHASED',
+                offer_id: null,
             });
 
             return false;

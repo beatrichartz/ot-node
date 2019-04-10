@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: () => uuidv4(),
             primaryKey: true,
         },
+        offer_id: DataTypes.STRING,
         data_set_id: DataTypes.STRING,
         source_wallet: DataTypes.STRING,
         litigation_public_key: DataTypes.STRING,
@@ -18,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
         color: DataTypes.INTEGER,
         created_at: DataTypes.DATE,
         updated_at: DataTypes.DATE,
+        origin: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
     }, {
         tableName: 'holding_data',
     });
@@ -25,6 +30,10 @@ module.exports = (sequelize, DataTypes) => {
         holding_data.belongsTo(models.data_info, {
             foreignKey: 'data_set_id',
             targetKey: 'data_set_id',
+        });
+        holding_data.belongsTo(models.bids, {
+            foreignKey: 'offer_id',
+            targetKey: 'offer_id',
         });
     };
     return holding_data;
