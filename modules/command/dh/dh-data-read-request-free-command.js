@@ -56,7 +56,7 @@ class DHDataReadRequestFreeCommand extends Command {
             // TODO: Only one import ID used. Later we'll support replication from multiple imports.
             // eslint-disable-next-line
             const importId = data_set_id;
-            const dataInfo = await Models.dataset.findOne({
+            const dataInfo = await Models.datasets.findOne({
                 where: {
                     data_set_id: importId,
                 },

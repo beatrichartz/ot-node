@@ -38,7 +38,7 @@ class DVDataReadRequestCommand extends Command {
             }
          */
 
-        const dataInfo = await Models.dataset.findOne({
+        const dataInfo = await Models.datasets.findOne({
             where: { data_set_id: dataSetId },
         });
         if (dataInfo) {

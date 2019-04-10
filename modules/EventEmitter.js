@@ -185,7 +185,7 @@ class EventEmitter {
             logger.info(`Get imported vertices triggered for import ID ${dataSetId}`);
             try {
                 const dataInfo =
-                    await Models.dataset.findOne({ where: { data_set_id: dataSetId } });
+                    await Models.datasets.findOne({ where: { data_set_id: dataSetId } });
 
                 if (!dataInfo) {
                     logger.info(`Import data for data set ID ${dataSetId} does not exist.`);
@@ -237,7 +237,7 @@ class EventEmitter {
         this._on('api-imports-info', async (data) => {
             logger.debug('Get import ids');
             try {
-                const dataimports = await Models.dataset.findAll();
+                const dataimports = await Models.datasets.findAll();
                 data.response.status(200);
                 const promises = dataimports.map(async di => ({
                     data_set_id: di.data_set_id,
@@ -435,7 +435,7 @@ class EventEmitter {
 
             try {
                 const dataSize = bytes(JSON.stringify(vertices));
-                await Models.dataset
+                await Models.datasets
                     .create({
                         data_set_id,
                         root_hash,
@@ -538,7 +538,7 @@ class EventEmitter {
             try {
                 logger.info(`Preparing to create offer for data set ${dataSetId}`);
 
-                const dataset = await Models.dataset.findOne({
+                const dataset = await Models.datasets.findOne({
                     where: { data_set_id: dataSetId },
                 });
                 if (dataset == null) {

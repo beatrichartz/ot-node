@@ -37,7 +37,7 @@ class DHReadDataLocationRequestCommand extends Command {
         // Handle query here.
         const graphImports = await this.graphStorage.findImportIds(msgQuery);
         // Filter imports not stored in local DB.
-        let imports = await Models.dataset.findAll({
+        let imports = await Models.datasets.findAll({
             attributes: ['data_set_id'],
             where: {
                 data_set_id: {
@@ -85,7 +85,7 @@ class DHReadDataLocationRequestCommand extends Command {
             }
         });
 
-        const dataInfos = await Models.dataset.findAll({
+        const dataInfos = await Models.datasets.findAll({
             where: {
                 data_set_id: {
                     [Op.in]: replicatedImportIds,

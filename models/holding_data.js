@@ -27,7 +27,7 @@ module.exports = (sequelize, DataTypes) => {
         tableName: 'holding_data',
     });
     holding_data.associate = (models) => {
-        holding_data.belongsTo(models.dataset, {
+        holding_data.belongsTo(models.datasets, {
             foreignKey: 'data_set_id',
             targetKey: 'data_set_id',
         });

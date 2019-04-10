@@ -116,7 +116,7 @@ class DhReplicationImportCommand extends Command {
             }, true, encColor);
         }
 
-        let dataInfo = await Models.dataset.findOne({
+        let dataInfo = await Models.datasets.findOne({
             where: {
                 data_set_id: dataSetId,
             },
@@ -137,7 +137,7 @@ class DhReplicationImportCommand extends Command {
             importResult = importResult.response;
 
             const dataSize = bytes(JSON.stringify(importResult.vertices));
-            dataInfo = await Models.dataset.create({
+            dataInfo = await Models.datasets.create({
                 data_set_id: importResult.data_set_id,
                 total_documents: importResult.vertices.length,
                 root_hash: importResult.root_hash,
@@ -167,7 +167,7 @@ class DhReplicationImportCommand extends Command {
             },
         });
         await holdingData.setBid(bid);
-        await holdingData.setDataInfo(dataInfo);
+        await holdingData.setDataset(dataInfo);
 
         this.logger.important(`[DH] Replication finished for offer ID ${offerId}`);
 

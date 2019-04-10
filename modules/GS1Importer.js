@@ -798,7 +798,7 @@ class GS1Importer {
                 normalizedEdges,
             );
 
-            const dataInfo = await models.dataset.find({ where: { data_set_id: dataSetId } });
+            const dataInfo = await models.datasets.find({ where: { data_set_id: dataSetId } });
             if (dataInfo) {
                 throw new ImporterError(`Data set ${dataSetId} has already been imported`);
             }

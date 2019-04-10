@@ -1,7 +1,7 @@
 const uuidv4 = require('uuid/v4');
 
 module.exports = (sequelize, DataTypes) => {
-    const dataset = sequelize.define('dataset', {
+    const datasets = sequelize.define('datasets', {
         id: {
             type: DataTypes.UUID,
             primaryKey: true,
@@ -21,10 +21,10 @@ module.exports = (sequelize, DataTypes) => {
         created_at: DataTypes.DATE,
         updated_at: DataTypes.DATE,
     }, {
-        tableName: 'dataset',
+        tableName: 'datasets',
     });
-    dataset.associate = (models) => {
+    datasets.associate = (models) => {
         // associations can be defined here
     };
-    return dataset;
+    return datasets;
 };
