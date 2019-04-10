@@ -162,7 +162,7 @@ class DhReplicationImportCommand extends Command {
             origin: 'REPLICATED',
         });
 
-        const bid = Models.bids.findOne({
+        const bid = await Models.bids.findOne({
             where: {
                 offer_id: offerId,
             },
