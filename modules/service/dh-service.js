@@ -135,7 +135,6 @@ class DHService {
             litigation_interval_in_minutes: litigationIntervalInMinutes,
             token_amount: tokenAmountPerHolder,
             holding_time_in_minutes: holdingTimeInMinutes,
-            deposited: false,
             status: 'PENDING',
             message: 'Bid is still pending',
         });
@@ -190,9 +189,6 @@ class DHService {
                 },
                 status: {
                     [Op.in]: ['SENT'],
-                },
-                deposit: {
-                    [Op.ne]: null,
                 },
             },
         });

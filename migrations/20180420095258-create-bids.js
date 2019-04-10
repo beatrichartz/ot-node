@@ -29,10 +29,6 @@ module.exports = {
         holding_time_in_minutes: {
             type: Sequelize.INTEGER,
         },
-        deposit: {
-            allowNull: true,
-            type: Sequelize.STRING,
-        },
         status: {
             allowNull: false,
             type: Sequelize.STRING,
