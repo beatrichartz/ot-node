@@ -1,5 +1,12 @@
+const uuidv4 = require('uuid/v4');
+
 module.exports = (sequelize, DataTypes) => {
     const miner = sequelize.define('miner_tasks', {
+        id: {
+            type: DataTypes.STRING,
+            defaultValue: () => uuidv4(),
+            primaryKey: true,
+        },
         offer_id: DataTypes.STRING,
         difficulty: DataTypes.INTEGER,
         task: DataTypes.STRING,
@@ -10,7 +17,10 @@ module.exports = (sequelize, DataTypes) => {
         updated_at: DataTypes.DATE,
     }, {});
     miner.associate = (models) => {
-        // associations can be defined here
+        miner.belongsTo(models.offers, {
+            foreignKey: 'offer_id',
+            targetKey: 'offer_id',
+        });
     };
     return miner;
 };
