@@ -699,7 +699,6 @@ class Ethereum {
             });
             for (let i = 0; i < events.length; i += 1) {
                 const event = events[i];
-                const timestamp = Date.now();
                 if (event.returnValues.DH_wallet) {
                     event.returnValues.DH_wallet = event.returnValues.DH_wallet.toLowerCase();
                 }
@@ -711,7 +710,6 @@ class Ethereum {
                     data: JSON.stringify(event.returnValues),
                     data_set_id: Utilities.normalizeHex(event.returnValues.dataSetId),
                     block: event.blockNumber,
-                    timestamp,
                     finished: 0,
                 });
             }
@@ -721,8 +719,8 @@ class Ethereum {
             // Delete old events
             await Models.events.destroy({
                 where: {
-                    timestamp: {
-                        [Op.lt]: twoWeeksAgo.getTime(),
+                    created_at: {
+                        [Op.lt]: twoWeeksAgo,
                     },
                     finished: 1,
                 },

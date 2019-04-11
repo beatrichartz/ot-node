@@ -13,7 +13,6 @@ module.exports = (sequelize, DataTypes) => {
         data_set_id: DataTypes.STRING,
         block: DataTypes.INTEGER,
         finished: DataTypes.BOOLEAN,
-        timestamp: DataTypes.INTEGER,
         created_at: DataTypes.DATE,
         updated_at: DataTypes.DATE,
     }, {});

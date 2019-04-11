@@ -30,10 +30,6 @@ module.exports = {
             allowNull: false,
             type: Sequelize.INTEGER,
         },
-        timestamp: {
-            allowNull: false,
-            type: Sequelize.INTEGER,
-        },
     }),
-    down: (queryInterface, Sequelize) => queryInterface.dropTable('Events'),
+    down: (queryInterface, Sequelize) => queryInterface.dropTable('events'),
 };

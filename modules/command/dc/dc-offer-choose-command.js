@@ -2,8 +2,6 @@ const Command = require('../command');
 const models = require('../../../models/index');
 const Utilities = require('../../Utilities');
 
-const { Op } = models.Sequelize;
-
 /**
  * Creates offer on blockchain
  */
@@ -31,30 +29,22 @@ class DCOfferChooseCommand extends Command {
             dhIdentity,
         } = command.data;
 
-        const offer = await models.offers.findOne({ where: { id: internalOfferId } });
+        let offer = await models.offers.findOne({ where: { id: internalOfferId } });
         offer.status = 'CHOOSING';
         offer.message = 'Choosing wallets for offer';
-        await offer.save({ fields: ['status', 'message'] });
+        offer = await offer.save({ fields: ['status', 'message'] });
         this.remoteControl.offerUpdate({
             id: internalOfferId,
         });
 
-        const replications = await models.holders.findAll({
-            where: {
-                offer_id: offer.offer_id,
-                status: {
-                    [Op.in]: ['STARTED', 'VERIFIED'],
-                },
-            },
-        });
-
-        const verifiedReplications = replications.filter(r => r.status === 'VERIFIED');
+        const holders = await offer.getHolders();
+        const verifiedHolders = holders.filter(r => r.status === 'VERIFIED');
         if (excludedDHs == null) {
             const action = isReplacement === true ? 'Replacement' : 'Replication';
-            this.logger.notify(`${action} window for ${offer.offer_id} is closed. Replicated to ${replications.length} peers. Verified ${verifiedReplications.length}.`);
+            this.logger.notify(`${action} window for ${offer.offer_id} is closed. Replicated to ${holders.length} peers. Verified ${verifiedHolders.length}.`);
         }
 
-        let identities = verifiedReplications
+        let identities = verifiedHolders
             .map(r => Utilities.denormalizeHex(r.dh_identity).toLowerCase());
 
         if (excludedDHs) {

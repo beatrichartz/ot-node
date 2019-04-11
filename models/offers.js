@@ -28,7 +28,14 @@ module.exports = (sequelize, DataTypes) => {
         updated_at: DataTypes.DATE,
     }, {});
     offers.associate = (models) => {
-    // associations can be defined here
+        offers.belongsTo(models.datasets, {
+            foreignKey: 'data_set_id',
+            targetKey: 'data_set_id',
+        });
+        offers.hasMany(models.holders, {
+            foreignKey: 'offer_id',
+            sourceKey: 'offer_id',
+        });
     };
     return offers;
 };
