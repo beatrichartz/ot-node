@@ -27,7 +27,7 @@ class DHChallengeCommand extends Command {
             litigatorNodeId,
         } = command.data;
 
-        const holdingData = await models.holding_data.findOne({
+        const holdingData = await models.holdings.findOne({
             limit: 1,
             where: {
                 data_set_id: datasetId,

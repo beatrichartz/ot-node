@@ -27,7 +27,7 @@ class DHLitigationAnswerCommand extends Command {
             dataSetId,
         } = command.data;
 
-        const holdingData = await models.holding_data.findAll({
+        const holdingData = await models.holdings.findAll({
             where: {
                 data_set_id: dataSetId,
             },

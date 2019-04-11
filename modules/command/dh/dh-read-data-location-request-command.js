@@ -59,7 +59,7 @@ class DHReadDataLocationRequestCommand extends Command {
         // distribute data gotten from someone else.
         const replicatedImportIds = [];
         // Then check if I bought replication from another DH.
-        const data_holders = await Models.holding_data.findAll({
+        const data_holders = await Models.holdings.findAll({
             where: {
                 id: {
                     [Op.in]: imports,

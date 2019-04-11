@@ -467,7 +467,7 @@ class DHService {
             ImportUtilities.unpackKeys(vertices, edges);
 
             // Get replication key and then encrypt data.
-            const holdingDataModel = await Models.holding_data.find({ where: { id: importId } });
+            const holdingDataModel = await Models.holdings.find({ where: { id: importId } });
 
             if (!holdingDataModel) {
                 throw Error(`Didn't find import with ID. ${importId}`);
@@ -788,7 +788,7 @@ class DHService {
         const decryptKeys = {};
 
         // Get decode keys.
-        const holdingData = await Models.holding_data.findAll({
+        const holdingData = await Models.holdings.findAll({
             where: {
                 id: {
                     [Op.in]: importIds,
@@ -859,7 +859,7 @@ class DHService {
      */
     async getImport(dataSetId) {
         // Check if import came from DH replication or reading replication.
-        const holdingData = await Models.holding_data.find({ where: { data_set_id: dataSetId } });
+        const holdingData = await Models.holdings.find({ where: { data_set_id: dataSetId } });
 
         const dataInfo = await Models.datasets.find({ where: { data_set_id: dataSetId } });
 

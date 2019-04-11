@@ -2,11 +2,11 @@
 module.exports = {
     up: async (queryInterface, Sequelize) =>
         queryInterface.addColumn(
-            'holding_data',
+            'holdings',
             'litigation_root_hash',
             {
                 type: Sequelize.STRING,
             },
         ),
-    down: queryInterface => queryInterface.removeColumn('holding_data', 'litigation_root_hash'),
+    down: queryInterface => queryInterface.removeColumn('holdings', 'litigation_root_hash'),
 };

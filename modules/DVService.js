@@ -290,7 +290,7 @@ class DVService {
 
             try {
                 const publicKey = Encryption.unpackEPK(epk);
-                await Models.holding_data.create({
+                await Models.holdings.create({
                     id: importId,
                     source_wallet: wallet,
                     data_public_key: publicKey,
@@ -346,7 +346,7 @@ class DVService {
             const epk = m1 + Encryption.xor(purchase.encrypted_block, e) + m2;
             const publicKey = Encryption.unpackEPK(epk);
 
-            await Models.holding_data.create({
+            await Models.holdings.create({
                 id: importId,
                 source_wallet: wallet,
                 data_public_key: publicKey,

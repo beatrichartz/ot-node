@@ -279,7 +279,7 @@ class ImportUtilities {
             break;
         }
         case 'HOLDING': {
-            const holdingData = await Models.holding_data.findOne({
+            const holdingData = await Models.holdings.findOne({
                 where: { data_set_id: dataSetId },
             });
             transactionHash = holdingData.transaction_hash;

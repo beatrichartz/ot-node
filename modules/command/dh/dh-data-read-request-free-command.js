@@ -70,7 +70,7 @@ class DHDataReadRequestFreeCommand extends Command {
             let vertices;
             if (dataInfo.origin === 'HOLDING') { // DH has the data
                 // Get replication key and then encrypt data.
-                const holdingDataModels = await Models.holding_data.findAll({
+                const holdingDataModels = await Models.holdings.findAll({
                     where: { data_set_id: importId },
                 });
 

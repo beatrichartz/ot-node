@@ -97,7 +97,7 @@ class DhReplicationImportCommand extends Command {
         const calculatedDistPublicKey = Encryption.unpackEPK(distributionEpk);
         ImportUtilities.immutableDecryptVertices(distEncVertices, calculatedDistPublicKey);
 
-        let holdingData = await Models.holding_data.findOne({
+        let holdingData = await Models.holdings.findOne({
             where: {
                 data_set_id: dataSetId,
                 color: encColor,
@@ -149,7 +149,7 @@ class DhReplicationImportCommand extends Command {
         }
 
         // Store holding information and generate keys for eventual data replication.
-        holdingData = await Models.holding_data.create({
+        holdingData = await Models.holdings.create({
             source_wallet: dcWallet,
             litigation_public_key: litigationPublicKey,
             litigation_root_hash: litigationRootHash,

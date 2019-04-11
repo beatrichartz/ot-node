@@ -1,7 +1,7 @@
 const uuidv4 = require('uuid/v4');
 
 module.exports = (sequelize, DataTypes) => {
-    const holding_data = sequelize.define('holding_data', {
+    const holdings = sequelize.define('holdings', {
         id: {
             type: DataTypes.STRING,
             defaultValue: () => uuidv4(),
@@ -24,17 +24,17 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
         },
     }, {
-        tableName: 'holding_data',
+        tableName: 'holdings',
     });
-    holding_data.associate = (models) => {
-        holding_data.belongsTo(models.datasets, {
+    holdings.associate = (models) => {
+        holdings.belongsTo(models.datasets, {
             foreignKey: 'data_set_id',
             targetKey: 'data_set_id',
         });
-        holding_data.belongsTo(models.bids, {
+        holdings.belongsTo(models.bids, {
             foreignKey: 'offer_id',
             targetKey: 'offer_id',
         });
     };
-    return holding_data;
+    return holdings;
 };
