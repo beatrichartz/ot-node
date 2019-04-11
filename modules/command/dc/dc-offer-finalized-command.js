@@ -47,11 +47,11 @@ class DcOfferFinalizedCommand extends Command {
 
                 this.logger.important(`Offer ${offerId} finalized`);
 
-                const offer = await Models.offers.findOne({ where: { offer_id: offerId } });
+                let offer = await Models.offers.findOne({ where: { offer_id: offerId } });
                 offer.status = 'FINALIZED';
                 offer.global_status = 'ACTIVE';
                 offer.message = 'Offer has been finalized. Offer is now active.';
-                await offer.save({ fields: ['status', 'message', 'global_status'] });
+                offer = await offer.save({ fields: ['status', 'message', 'global_status'] });
                 this.remoteControl.offerUpdate({
                     offer_id: offerId,
                 });
@@ -103,20 +103,18 @@ class DcOfferFinalizedCommand extends Command {
         const startTime = Date.now();
         const endTime = startTime + (offer.holding_time_in_minutes * 60 * 1000);
         const vertices = await this.graphStorage.findVerticesByImportId(offer.data_set_id);
-        const holders = [holder1, holder2, holder3].map(h => Utilities.normalizeHex(h));
+        const holderIdentities = [holder1, holder2, holder3].map(h => Utilities.normalizeHex(h));
+
+        let holders = await offer.getHolders();
+        holders = holders.filter(h => holderIdentities.includes(h.dh_identity));
+
         await forEach(holders, async (holder) => {
-            const dbHolder = await Models.holders.findOne({
-                where: {
-                    offer_id: offer.offer_id,
-                    dh_identity: holder,
-                },
-            });
-            dbHolder.status = 'HOLDING';
-            await dbHolder.save({ fields: ['status'] });
+            holder.status = 'HOLDING';
+            await holder.save({ fields: ['status'] });
 
             const encryptedVertices = importUtilitites.immutableEncryptVertices(
                 vertices,
-                dbHolder.litigation_private_key,
+                holder.litigation_private_key,
             );
 
             const challenges = this.challengeService.generateChallenges(
@@ -133,7 +131,7 @@ class DcOfferFinalizedCommand extends Command {
                     offer_id: offer.offer_id,
                     status: 'PENDING',
                 });
-                await dbChallenge.setHolder(dbHolder);
+                await dbChallenge.setHolder(holder);
             });
         });
     }
