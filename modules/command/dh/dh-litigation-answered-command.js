@@ -24,7 +24,7 @@ class DHLitigationAnsweredCommand extends Command {
         const events = await Models.events.findAll({
             where: {
                 event: 'LitigationAnswered',
-                finished: 0,
+                finished: false,
             },
         });
         if (events) {

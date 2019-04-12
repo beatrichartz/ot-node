@@ -22,7 +22,7 @@ class DCLitigationCompleted extends Command {
         const events = await models.events.findAll({
             where: {
                 event: 'LitigationCompleted',
-                finished: 0,
+                finished: false,
             },
         });
         if (events) {

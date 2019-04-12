@@ -31,7 +31,7 @@ class DcOfferFinalizedCommand extends Command {
         const events = await Models.events.findAll({
             where: {
                 event: 'OfferFinalized',
-                finished: 0,
+                finished: false,
             },
         });
         if (events) {

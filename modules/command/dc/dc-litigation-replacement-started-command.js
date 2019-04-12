@@ -22,7 +22,7 @@ class DCLitigationReplacementStartedCommand extends Command {
         const events = await models.events.findAll({
             where: {
                 event: 'ReplacementStarted',
-                finished: 0,
+                finished: false,
             },
         });
         if (events.length > 0) {

@@ -27,7 +27,7 @@ class DcOfferTaskCommand extends Command {
             where: {
                 event: 'OfferTask',
                 data_set_id: dataSetIdNorm,
-                finished: 0,
+                finished: false,
             },
         });
         if (event) {

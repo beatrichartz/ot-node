@@ -24,7 +24,7 @@ class DHReplacementCompleted extends Command {
         const events = await Models.events.findAll({
             where: {
                 event: 'ReplacementCompleted',
-                finished: 0,
+                finished: false,
             },
         });
         if (events) {

@@ -14,6 +14,8 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             defaultValue: () => Date.now(),
         },
+        created_at: DataTypes.DATE,
+        updated_at: DataTypes.DATE,
     }, {});
     network_replies.associate = function (models) {
         // associations can be defined here

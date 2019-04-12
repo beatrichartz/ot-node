@@ -12,16 +12,14 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             unique: true,
         },
-        data_provider_wallet: DataTypes.STRING(42),
+        data_provider_wallet: DataTypes.STRING,
         total_documents: DataTypes.INTEGER,
-        root_hash: DataTypes.STRING(40),
+        root_hash: DataTypes.STRING,
         import_timestamp: DataTypes.DATE,
         data_size: DataTypes.INTEGER,
         origin: DataTypes.STRING,
         created_at: DataTypes.DATE,
         updated_at: DataTypes.DATE,
-    }, {
-        tableName: 'datasets',
     });
     datasets.associate = (models) => {
         // associations can be defined here

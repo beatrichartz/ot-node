@@ -710,7 +710,7 @@ class Ethereum {
                     data: JSON.stringify(event.returnValues),
                     data_set_id: Utilities.normalizeHex(event.returnValues.dataSetId),
                     block: event.blockNumber,
-                    finished: 0,
+                    finished: false,
                 });
             }
 
@@ -722,7 +722,7 @@ class Ethereum {
                     created_at: {
                         [Op.lt]: twoWeeksAgo,
                     },
-                    finished: 1,
+                    finished: true,
                 },
             });
         } catch (error) {
@@ -748,7 +748,7 @@ class Ethereum {
             const token = setInterval(() => {
                 const where = {
                     event,
-                    finished: 0,
+                    finished: false,
                 };
                 if (importId) {
                     where.import_id = importId;
@@ -810,7 +810,7 @@ class Ethereum {
             const where = {
                 [Op.or]: event.map(e => ({ event: e })),
                 block: { [Op.gte]: startBlockNumber },
-                finished: 0,
+                finished: false,
             };
 
             const eventData = await Models.events.findAll({ where });
@@ -841,7 +841,7 @@ class Ethereum {
             const where = {
                 [Op.or]: event.map(e => ({ event: e })),
                 block: { [Op.gte]: startBlockNumber },
-                finished: 0,
+                finished: false,
             };
 
             const eventData = await Models.events.findAll({ where });

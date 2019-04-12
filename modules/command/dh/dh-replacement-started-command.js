@@ -23,7 +23,7 @@ class DHReplacementStartedCommand extends Command {
                 limit: 1,
                 where: {
                     event: 'ReplacementStarted',
-                    finished: 0,
+                    finished: false,
                 },
             });
 
@@ -71,7 +71,7 @@ class DHReplacementStartedCommand extends Command {
         const events = await models.events.findAll({
             where: {
                 event: 'LitigationCompleted',
-                finished: 0,
+                finished: false,
             },
             order: [
                 ['timestamp', 'DESC'],
