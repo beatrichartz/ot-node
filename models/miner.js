@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
         task: DataTypes.STRING,
         result: DataTypes.JSON,
         status: DataTypes.STRING,
-        message: DataTypes.STRING,
+        message: DataTypes.TEXT,
         created_at: DataTypes.DATE,
         updated_at: DataTypes.DATE,
     }, {});

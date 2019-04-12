@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         litigation_interval_in_minutes: DataTypes.INTEGER,
         token_amount: DataTypes.STRING,
         status: DataTypes.STRING,
-        message: DataTypes.STRING,
+        message: DataTypes.TEXT,
         created_at: DataTypes.DATE,
         updated_at: DataTypes.DATE,
     }, {});

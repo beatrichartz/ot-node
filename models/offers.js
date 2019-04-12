@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         task: DataTypes.STRING,
         status: DataTypes.STRING,
         global_status: DataTypes.STRING,
-        message: DataTypes.STRING,
+        message: DataTypes.TEXT,
         transaction_hash: DataTypes.STRING(128),
         created_at: DataTypes.DATE,
         updated_at: DataTypes.DATE,
