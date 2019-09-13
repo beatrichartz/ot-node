@@ -14,9 +14,12 @@ const storagePath = process.env.SEQUELIZEDB ?
 
 module.exports = {
     [process.env.NODE_ENV]: {
-        database: 'main',
+        database: 'origintrail',
         host: '127.0.0.1',
-        dialect: 'sqlite',
+        port: 5433,
+        dialect: 'postgres',
+        username: 'postgres',
+        password: 'root',
         storage: storagePath,
         migrationStorageTableName: 'sequelize_meta',
         logging: false,
