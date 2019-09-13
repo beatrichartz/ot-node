@@ -159,7 +159,7 @@ class DHService {
 
         await this.commandExecutor.add({
             name: 'dhOfferHandleCommand',
-            delay: 15000,
+            delay: 45000,
             data,
             transactional: false,
         });
@@ -327,7 +327,7 @@ class DHService {
 
         await this.commandExecutor.add({
             name: 'dhReplacementHandleCommand',
-            delay: 15000,
+            delay: 45000,
             data: {
                 offerId,
                 litigatorIdentity,
