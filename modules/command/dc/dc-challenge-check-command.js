@@ -1,6 +1,5 @@
 const Command = require('../command');
 const models = require('../../../models');
-const bugsnag = require('bugsnag');
 
 /**
  *  Checks one DH's challenge response
@@ -13,6 +12,9 @@ class DCChallengeCheckCommand extends Command {
         this.graphStorage = ctx.graphStorage;
         this.challengeService = ctx.challengeService;
         this.config = ctx.config;
+
+        // Bugsnag functions
+        this.notifyEvent = ctx.notifyEvent;
     }
 
     /**
@@ -58,11 +60,14 @@ class DCChallengeCheckCommand extends Command {
         }
         let bugsnagMessage = 'Challenge check failed. Initiating litigation. ';
         if (!challenge || !challenge.answer) {
-            bugsnagMessage = `${bugsnagMessage}No answer from challenged Node!`;
+            bugsnagMessage += 'No answer from challenged Node!';
+            this.logger.warn(`Missing answer to challenge '${challenge.id}' for DH ID ${challenge.dh_id}.`);
         } else {
-            bugsnagMessage = `${bugsnagMessage}Node responded with wrong answer!`;
+            bugsnagMessage = 'Node responded with wrong answer!';
+            this.logger.warn(`Wrong answer to challenge '${challenge.id}' for DH ID ${challenge.dh_id}. `
+                + `Got ${challenge.answer} for expected answer ${challenge.expected_answer}.`);
         }
-        bugsnag.notify(bugsnagMessage, {
+        this.notifyEvent(bugsnagMessage, {
             user: {
                 id: challenge.dh_id,
                 dc_identity: this.config.identity,
@@ -77,7 +82,6 @@ class DCChallengeCheckCommand extends Command {
             severity: 'info',
         });
 
-        this.logger.info(`Wrong answer to challenge '${challenge.id}' for DH ID ${challenge.dh_id}. Got ${challenge.answer} for expected answer ${challenge.expected_answer}.`);
         return {
             commands: [
                 {

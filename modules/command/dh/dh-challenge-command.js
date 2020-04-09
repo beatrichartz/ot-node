@@ -1,6 +1,5 @@
 const Command = require('../command');
 const models = require('../../../models/index');
-const bugsnag = require('bugsnag');
 
 /**
  * Handles one data challenge
@@ -15,6 +14,9 @@ class DHChallengeCommand extends Command {
         this.challengeService = ctx.challengeService;
         this.replicationService = ctx.replicationService;
         this.importService = ctx.importService;
+
+        // Bugsnag functions
+        this.notifyEvent = ctx.notifyEvent;
     }
 
     /**
@@ -54,7 +56,7 @@ class DHChallengeCommand extends Command {
 
         if (this.config.send_challenges_log) {
             const bugsnagMessage = 'DH challenge answer';
-            bugsnag.notify(bugsnagMessage, {
+            this.notifyEvent(bugsnagMessage, {
                 user: {
                     dh_node_id: this.config.identity,
                     dc_identity: litigatorNodeId,

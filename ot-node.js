@@ -5,6 +5,10 @@ if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = 'testnet';
 }
 
+const bugsnag = require('@bugsnag/js');
+
+let bugsnagConsole;
+
 const HttpNetwork = require('./modules/network/http/http-network');
 const Kademlia = require('./modules/network/kademlia/kademlia');
 const Transport = require('./modules/network/transport');
@@ -23,7 +27,6 @@ const WOTImporter = require('./modules/importer/wot-importer');
 const EpcisOtJsonTranspiler = require('./modules/transpiler/epcis/epcis-otjson-transpiler');
 const WotOtJsonTranspiler = require('./modules/transpiler/wot/wot-otjson-transpiler');
 const RemoteControl = require('./modules/RemoteControl');
-const bugsnag = require('bugsnag');
 const rc = require('rc');
 const uuidv4 = require('uuid/v4');
 const awilix = require('awilix');
@@ -115,7 +118,7 @@ process.on('unhandledRejection', (reason, p) => {
         delete cleanConfig.database;
         delete cleanConfig.blockchain;
 
-        bugsnag.notify(
+        bugsnagConsole.notify(
             reason,
             {
                 user: {
@@ -142,7 +145,7 @@ process.on('uncaughtException', (err) => {
     delete cleanConfig.database;
     delete cleanConfig.blockchain;
 
-    bugsnag.notify(
+    bugsnagConsole.notify(
         err,
         {
             user: {
@@ -181,64 +184,62 @@ process.on('SIGINT', () => {
 });
 
 function notifyBugsnag(error, metadata, subsystem) {
-    if (process.env.NODE_ENV !== 'development') {
-        const cleanConfig = Object.assign({}, config);
-        delete cleanConfig.node_private_key;
-        delete cleanConfig.houston_password;
-        delete cleanConfig.database;
-        delete cleanConfig.blockchain;
+    const cleanConfig = Object.assign({}, config);
+    delete cleanConfig.node_private_key;
+    delete cleanConfig.houston_password;
+    delete cleanConfig.database;
+    delete cleanConfig.blockchain;
 
-        const options = {
-            user: {
-                id: config.node_wallet,
-                identity: config.node_kademlia_id,
-                config: cleanConfig,
-            },
+    const options = {
+        user: {
+            id: config.node_wallet,
+            identity: config.node_kademlia_id,
+            config: cleanConfig,
+        },
+    };
+
+    if (subsystem) {
+        options.subsystem = {
+            name: subsystem,
         };
-
-        if (subsystem) {
-            options.subsystem = {
-                name: subsystem,
-            };
-        }
-
-        if (metadata) {
-            Object.assign(options, metadata);
-        }
-
-        bugsnag.notify(error, options);
     }
+
+    if (metadata) {
+        Object.assign(options, metadata);
+    }
+
+    console.log(`Sending error to bugsnag: ${error}`);
+    bugsnagConsole.notify(error, options);
 }
 
 function notifyEvent(message, metadata, subsystem) {
-    if (process.env.NODE_ENV !== 'development') {
-        const cleanConfig = Object.assign({}, config);
-        delete cleanConfig.node_private_key;
-        delete cleanConfig.houston_password;
-        delete cleanConfig.database;
-        delete cleanConfig.blockchain;
+    const cleanConfig = Object.assign({}, config);
+    delete cleanConfig.node_private_key;
+    delete cleanConfig.houston_password;
+    delete cleanConfig.database;
+    delete cleanConfig.blockchain;
 
-        const options = {
-            user: {
-                id: config.node_wallet,
-                identity: config.node_kademlia_id,
-                config: cleanConfig,
-            },
-            severity: 'info',
+    const options = {
+        user: {
+            id: config.node_wallet,
+            identity: config.node_kademlia_id,
+            config: cleanConfig,
+        },
+        severity: 'info',
+    };
+
+    if (subsystem) {
+        options.subsystem = {
+            name: subsystem,
         };
-
-        if (subsystem) {
-            options.subsystem = {
-                name: subsystem,
-            };
-        }
-
-        if (metadata) {
-            Object.assign(options, metadata);
-        }
-
-        bugsnag.notify(message, options);
     }
+
+    if (metadata) {
+        Object.assign(options, metadata);
+    }
+
+    console.log(`Sending message to bugsnag: ${message}`);
+    bugsnagConsole.notify(message, options);
 }
 
 /**
@@ -249,23 +250,24 @@ class OTNode {
      * OriginTrail node system bootstrap function
      */
     async bootstrap() {
-        if (process.env.NODE_ENV !== 'development') {
-            bugsnag.register(
-                pjson.config.bugsnagkey,
-                {
-                    appVersion: pjson.version,
-                    autoNotify: false,
-                    sendCode: true,
-                    releaseStage: config.bugSnag.releaseStage,
-                    logger: {
-                        info: log.info,
-                        warn: log.warn,
-                        error: log.error,
-                    },
-                    logLevel: 'error',
+        console.log(`registering bugsnag with key:${pjson.config.bugsnagkey}`);
+        bugsnagConsole = bugsnag({
+            apiKey: pjson.config.bugsnagkey,
+            otherOptions: {
+                appVersion: pjson.version,
+                autoNotify: false,
+                sendCode: true,
+                releaseStage: 'bugsnag-testing',
+                logger: {
+                    info: log.info,
+                    warn: log.warn,
+                    error: log.error,
                 },
-            );
-        }
+                logLevel: 'error',
+            },
+        });
+
+        bugsnagConsole.notify('Started local node');
 
         try {
             // check if all dependencies are installed
@@ -484,6 +486,9 @@ class OTNode {
             log.info(`Remote control enabled and listening on port ${config.node_remote_control_port}`);
             await remoteControl.connect();
         }
+
+        const notifyError = container.resolve('notifyError');
+        notifyError('I have been summoned');
 
         const commandExecutor = container.resolve('commandExecutor');
         await commandExecutor.init();
