@@ -39,7 +39,6 @@ class ImportWorkerController {
             document,
             this.web3,
         );
-        console.log(`WALLET AFTER IMPORT: ${wallet}`);
         await this.importService.validateDocument(document);
 
         const forked = fork('modules/worker/graph-converter-worker.js');

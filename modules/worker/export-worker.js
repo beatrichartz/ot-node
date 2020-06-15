@@ -43,7 +43,6 @@ process.on('message', async (data) => {
         const web3 = new Web3(new Web3.providers.HttpProvider(config.blockchain.rpc_server_url));
 
         const dc_node_wallet = ImportUtilities.extractDatasetSigner(document, web3);
-        console.log(`DC NODE WALLET AFTER EXPORT: ${dc_node_wallet}`);
         const data_creator = document.datasetHeader.dataCreator;
 
         let dataset;
