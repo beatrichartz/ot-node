@@ -84,6 +84,11 @@ module.exports = {
                     'http://epcis.example.com/mda/longitude': '-70.0000',
                     objectType: 'vocabularyElement',
                     vocabularyType: 'urn:epcglobal:epcis:vtype:BusinessLocation',
+                    permissioned_data: {
+                        data: {
+                            id: 'halal_certificate_56789',
+                        },
+                    },
                 },
                 relations: [
                     {
@@ -515,6 +520,11 @@ module.exports = {
                     'http://epcis.example.com/mda/longitude': '-70.0000',
                     objectType: 'vocabularyElement',
                     vocabularyType: 'urn:epcglobal:epcis:vtype:BusinessLocation',
+                    permissioned_data: {
+                        data: {
+                            id: 'halal_certificate_56789',
+                        },
+                    },
                 },
                 relations: [
                     {

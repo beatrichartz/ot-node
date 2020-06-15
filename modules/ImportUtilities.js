@@ -140,14 +140,7 @@ class ImportUtilities {
     }
 
     static prepareDataset(originalDocument, config, web3) {
-        let document = OtJsonUtilities.prepareDatasetForNewImport(originalDocument);
-        if (!document) {
-            document = originalDocument;
-        }
-        const datasetHeader = document.datasetHeader ? document.datasetHeader : {};
-        ImportUtilities.calculateGraphPermissionedDataHashes(document['@graph']);
-        const id = ImportUtilities.calculateGraphPublicHash(document);
-
+        const datasetHeader = originalDocument.datasetHeader ? originalDocument.datasetHeader : {};
         const header = ImportUtilities.createDatasetHeader(
             config, null,
             datasetHeader.datasetTags,
@@ -155,17 +148,22 @@ class ImportUtilities {
             datasetHeader.datasetDescription,
             datasetHeader.OTJSONVersion,
         );
-        const dataset = {
-            '@id': id,
-            '@type': 'Dataset',
-            datasetHeader: header,
-            '@graph': document['@graph'],
-        };
+        originalDocument['@id'] = '';
+        originalDocument['@type'] = 'Dataset';
+        originalDocument.datasetHeader = header;
+        let document = OtJsonUtilities.prepareDatasetForNewImport(originalDocument);
+        if (!document) {
+            document = originalDocument;
+        }
 
-        const rootHash = ImportUtilities.calculateDatasetRootHash(dataset);
-        dataset.datasetHeader.dataIntegrity.proofs[0].proofValue = rootHash;
+        ImportUtilities.calculateGraphPermissionedDataHashes(document['@graph']);
+        const id = ImportUtilities.calculateGraphPublicHash(document);
+        originalDocument['@id'] = id;
 
-        const signed = ImportUtilities.signDataset(dataset, config, web3);
+        const rootHash = ImportUtilities.calculateDatasetRootHash(document);
+        document.datasetHeader.dataIntegrity.proofs[0].proofValue = rootHash;
+
+        const signed = ImportUtilities.signDataset(document, config, web3);
         return signed;
     }
 
@@ -643,10 +641,15 @@ class ImportUtilities {
             sortedDataset = Utilities.copyObject(dataset);
         }
         ImportUtilities.removeGraphPermissionedData(sortedDataset['@graph']);
+        console.log('SIGN!!!');
+        console.log(JSON.stringify(sortedDataset));
+
         const { signature } = web3.eth.accounts.sign(
             JSON.stringify(sortedDataset),
             Utilities.normalizeHex(config.node_private_key),
         );
+        console.log(signature);
+        console.log(config.node_wallet);
         dataset.signature = {
             value: signature,
             type: 'ethereum-signature',
@@ -665,6 +668,10 @@ class ImportUtilities {
             sortedDataset = Utilities.copyObject(dataset);
         }
         delete sortedDataset.signature;
+        ImportUtilities.removeGraphPermissionedData(sortedDataset['@graph']);
+        console.log('EXTRACT SIGNER!!!');
+        console.log(JSON.stringify(sortedDataset));
+        console.log(dataset.signature.value);
         return web3.eth.accounts.recover(JSON.stringify(sortedDataset), dataset.signature.value);
     }
 

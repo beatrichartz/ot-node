@@ -1,18 +1,18 @@
 {
   "@graph":[
     {
-      "@id":"urn:ot:object:actor:id:company-red",
+      "@id":"urn:ot:object:actor:id:company-red1231231241212312314",
       "@type":"otObject",
       "identifiers":[
         {
           "@type":"id",
-          "@value":"urn:ot:object:actor:id:company-red"
+          "@value":"urn:ot:object:actor:id:company-red123123124124"
         }
       ],
       "properties":{
         "___metadata":{
           "_attributes":{
-            "id":"urn:ot:object:actor:id:company-red"
+            "id":"urn:ot:object:actor:id:company-red123123124124"
           },
           "attribute":[
             {
