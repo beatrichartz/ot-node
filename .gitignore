@@ -3,6 +3,8 @@ node_modules
 .idea
 .vscode/*
 .env
+.envrc
+.tool-versions
 .nyc_output
 .origintrail_noderc*
 kad-storage/*
