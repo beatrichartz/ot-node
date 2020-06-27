@@ -795,10 +795,21 @@ class Ethereum {
             if (Utilities.isZeroHash(contract._address)) {
                 return;
             }
-            const events = await contract.getPastEvents('allEvents', {
-                fromBlock,
-                toBlock: 'latest',
-            });
+
+            const toBlock = await this.web3.eth.getBlockNumber();
+            const chunkSize = 10000;
+            const promises = [];
+            for (let chunkFromBlock = fromBlock;
+                chunkFromBlock < toBlock;
+                chunkFromBlock += chunkSize) {
+                promises.push(contract.getPastEvents('allEvents', {
+                    fromBlock: chunkFromBlock,
+                    toBlock: Math.min(chunkFromBlock + chunkSize, toBlock),
+                }));
+            }
+
+            const events = (await Promise.all(promises)).reduce((all, part) =>
+                Array.prototype.concat(all, part));
             for (let i = 0; i < events.length; i += 1) {
                 const event = events[i];
                 const timestamp = Date.now();
