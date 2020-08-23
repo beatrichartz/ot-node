@@ -1623,9 +1623,9 @@ class Ethereum {
             Array.prototype.concat(all, part));
 
         if (events.length) {
-            this.log.info(`Got ${events.length} '${eventType}' events for '${contractName}' and last ${toBlock - fromBlock} blocks`);
+            this.logger.info(`Got ${events.length} '${eventType}' events for '${contractName}' and last ${toBlock - fromBlock} blocks`);
         } else {
-            this.log.trace(`Got no '${eventType}' events for '${contractName}' and last ${toBlock - fromBlock} blocks`);
+            this.logger.trace(`Got no '${eventType}' events for '${contractName}' and last ${toBlock - fromBlock} blocks`);
         }
 
         return events;
