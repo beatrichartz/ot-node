@@ -1609,8 +1609,6 @@ class Ethereum {
         const toBlock = await this.getCurrentBlock();
         const chunkSize = 2500;
 
-        this.log.trace(`Getting past '${eventType}' events for '${contractName}' and last ${toBlock - fromBlock} blocks in chunks of ${chunkSize}`);
-
         const promises = [];
         for (let chunkFromBlock = fromBlock;
             chunkFromBlock < toBlock;

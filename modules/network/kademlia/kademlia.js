@@ -406,6 +406,7 @@ class Kademlia {
                         if (err) {
                             reject(Error(`Failed to find contact ${contactId}. ${err}`));
                         }
+                        this.log.trace(`Iterative find node result is ${result}`);
                         const contact = this._getContactFromInterativeFindNodeResult(result);
                         if (contact && Array.isArray(contact) && contact.length === 2
                                 && contact[1].hostname && contact[1].port
