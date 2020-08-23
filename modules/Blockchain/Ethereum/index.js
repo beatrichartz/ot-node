@@ -768,20 +768,7 @@ class Ethereum {
                 return;
             }
 
-            const toBlock = await this.web3.eth.getBlockNumber();
-            const chunkSize = 10000;
-            const promises = [];
-            for (let chunkFromBlock = fromBlock;
-                chunkFromBlock < toBlock;
-                chunkFromBlock += chunkSize) {
-                promises.push(contract.getPastEvents('allEvents', {
-                    fromBlock: chunkFromBlock,
-                    toBlock: Math.min(chunkFromBlock + chunkSize, toBlock),
-                }));
-            }
-
-            const events = (await Promise.all(promises)).reduce((all, part) =>
-                Array.prototype.concat(all, part));
+            const events = await this.getPastEventsForContract(contractName, 'allEvents', fromBlock);
             for (let i = 0; i < events.length; i += 1) {
                 const event = events[i];
                 const timestamp = Date.now();
@@ -1579,10 +1566,7 @@ class Ethereum {
     async getTotalPayouts(identity) {
         const totalAmount = new BN(0);
 
-        const events = await this.contractsByName.HOLDING_CONTRACT.getPastEvents('PaidOut', {
-            fromBlock: 0,
-            toBlock: 'latest',
-        });
+        const events = await this.getPastEventsForContract('HOLDING_CONTRACT', 'PaidOut', 0);
         events.forEach((event) => {
             if (Utilities.compareHexStrings(
                 event.returnValues.holder,
@@ -1618,6 +1602,35 @@ class Ethereum {
             return undefined;
         }
         return receipt.logs.length;
+    }
+
+    async getPastEventsForContract(contractName, eventType, fromBlock) {
+        const contract = this.contractsByName[contractName];
+        const toBlock = await this.getCurrentBlock();
+        const chunkSize = 2500;
+
+        this.log.trace(`Getting past '${eventType}' events for '${contractName}' and last ${toBlock - fromBlock} blocks in chunks of ${chunkSize}`);
+
+        const promises = [];
+        for (let chunkFromBlock = fromBlock;
+            chunkFromBlock < toBlock;
+            chunkFromBlock += chunkSize) {
+            promises.push(contract.getPastEvents(eventType, {
+                fromBlock: chunkFromBlock,
+                toBlock: Math.min(chunkFromBlock + chunkSize, toBlock),
+            }));
+        }
+
+        const events = (await Promise.all(promises)).reduce((all, part) =>
+            Array.prototype.concat(all, part));
+
+        if (events.length) {
+            this.log.info(`Got ${events.length} '${eventType}' events for '${contractName}' and last ${toBlock - fromBlock} blocks`);
+        } else {
+            this.log.trace(`Got no '${eventType}' events for '${contractName}' and last ${toBlock - fromBlock} blocks`);
+        }
+
+        return events;
     }
 }
 
